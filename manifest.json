@@ -1,0 +1,9 @@
+{
+  "name": "Dyscal",
+  "short_name": "Dyscal",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f4f5f9",
+  "theme_color": "#ef4444",
+  "orientation": "portrait"
+}
