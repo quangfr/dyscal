@@ -1,1 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dyscal – Prototype mobile</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f7fb;
+      --panel: #ffffff;
+      --text: #111111;
+      --muted: #545454;
+      --accent: #3b82f6;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+      font-size: 18px;
+    }
 
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Helvetica", "Arial", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header,
+    section,
+    footer {
+      width: 100%;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    li,
+    button,
+    label,
+    input {
+      font-size: 1.15rem;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.35rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.35rem;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .day-carousel {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding: 1rem;
+      padding-bottom: 6.5rem;
+    }
+
+    .day-card {
+      scroll-snap-align: start;
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: calc(100vh - 8rem);
+      padding: 1rem;
+      position: relative;
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: var(--radius);
+      background: #ffffff;
+      padding: 0.75rem 1rem;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .day-name {
+      font-weight: 800;
+      color: #ffffff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    .date-label {
+      font-weight: 700;
+      color: var(--text);
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 0.35rem 0.75rem;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .activity-list {
+      margin: 1rem 0;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+      max-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .activity-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      background: #ffffff;
+      color: #111111;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.04);
+      font-weight: 700;
+    }
+
+    .activity-item.highlighted {
+      background: #1f7a4b;
+      color: #ffffff;
+      box-shadow: none;
+    }
+
+    .activity-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .time-text {
+      font-weight: 800;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sticky-add {
+      position: sticky;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 16px;
+      padding: 1rem;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-hints {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .nav-pill {
+      background: #ffffff;
+      padding: 0.5rem 0.85rem;
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .flow-section {
+      padding: 1.25rem;
+      background: var(--panel);
+      margin: 1rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .stepper {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 1rem;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .bottom-bar {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .bottom-bar button {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 14px;
+      border: none;
+      font-weight: 800;
+      background: #111111;
+      color: #ffffff;
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .emoji-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.35rem;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
+      min-height: 100px;
+      font-weight: 700;
+    }
+
+    .emoji-card.highlighted {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: none;
+    }
+
+    .day-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .day-pill {
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      background: #ffffff;
+      font-weight: 800;
+      display: grid;
+      gap: 0.15rem;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .day-pill span {
+      display: block;
+    }
+
+    .tone-green { background: #d1fae5; color: #065f46; }
+    .tone-yellow { background: #fef3c7; color: #92400e; }
+    .tone-orange { background: #ffedd5; color: #9a3412; }
+    .tone-red { background: #fee2e2; color: #991b1b; }
+    .tone-purple { background: #ede9fe; color: #5b21b6; }
+    .tone-blue { background: #dbeafe; color: #1d4ed8; }
+    .tone-grey { background: #f3f4f6; color: #374151; }
+
+    .info-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #ffffff;
+      padding: 0.5rem 0.85rem;
+      border-radius: 999px;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.06);
+      font-weight: 700;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header style="padding: 1rem;">
+      <h1>Dyscal – parcours guidé</h1>
+      <p class="muted">Interface mobile pensée pour la dyslexie : gros boutons, étapes simples, zéro chiffre affiché.</p>
+    </header>
+
+    <main>
+      <section class="day-carousel" aria-label="Navigation temporelle limitée">
+        <article class="day-card" aria-label="hier dans la limite autorisée">
+          <div class="day-header">
+            <div class="day-name" style="background:#16a34a;">lundi en vert</div>
+            <div class="date-label">hier vingt-quatre juin</div>
+          </div>
+          <div class="activity-list" aria-label="Activités du jour">
+            <div class="activity-item" title="Appui long : modifier ou supprimer">
+              <div aria-hidden="true" style="font-size:1.6rem;">🍽️</div>
+              <div class="activity-meta">
+                <span class="time-text">douze et demi</span>
+                <span class="muted">Resto</span>
+              </div>
+            </div>
+            <div class="activity-item highlighted" aria-label="Activité mise en avant">
+              <div aria-hidden="true" style="font-size:1.6rem;">🏊‍♂️</div>
+              <div class="activity-meta">
+                <span class="time-text">dix-neuf heures</span>
+                <span>Piscine</span>
+              </div>
+            </div>
+            <div class="activity-item" aria-label="Activité périodique">
+              <div aria-hidden="true" style="font-size:1.6rem;">📖</div>
+              <div class="activity-meta">
+                <span class="time-text">vingt heures</span>
+                <span class="muted">Révision hebdo</span>
+              </div>
+            </div>
+          </div>
+          <div class="nav-hints">
+            <span class="nav-pill">Swipe gauche : jour précédent</span>
+            <span class="nav-pill">Swipe droite : jour suivant</span>
+          </div>
+          <button class="sticky-add" aria-label="Ajouter une activité">Ajouter</button>
+        </article>
+
+        <article class="day-card" aria-label="aujourd'hui">
+          <div class="day-header">
+            <div class="day-name" style="background:#f59e0b;">mardi en jaune</div>
+            <div class="date-label">aujourd’hui vingt-cinq juin</div>
+          </div>
+          <div class="activity-list" aria-label="Activités du jour">
+            <div class="activity-item highlighted" title="Appui long : modifier ou supprimer">
+              <div aria-hidden="true" style="font-size:1.6rem;">🤽‍♂️</div>
+              <div class="activity-meta">
+                <span class="time-text">huit heures</span>
+                <span>Club</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div aria-hidden="true" style="font-size:1.6rem;">💻</div>
+              <div class="activity-meta">
+                <span class="time-text">neuf heures</span>
+                <span class="muted">Travail</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div aria-hidden="true" style="font-size:1.6rem;">🍽️</div>
+              <div class="activity-meta">
+                <span class="time-text">douze heures</span>
+                <span class="muted">Déjeuner</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div aria-hidden="true" style="font-size:1.6rem;">🚶‍♂️</div>
+              <div class="activity-meta">
+                <span class="time-text">seize heures</span>
+                <span class="muted">Marche</span>
+              </div>
+            </div>
+          </div>
+          <div class="nav-hints">
+            <span class="nav-pill">Plage autorisée : quatorze jours en arrière</span>
+            <span class="nav-pill">Soixante jours en avant</span>
+          </div>
+          <button class="sticky-add" aria-label="Ajouter une activité">Ajouter</button>
+        </article>
+
+        <article class="day-card" aria-label="demain">
+          <div class="day-header">
+            <div class="day-name" style="background:#f97316;">mercredi en orange</div>
+            <div class="date-label">demain vingt-six juin</div>
+          </div>
+          <div class="activity-list" aria-label="Activités du jour">
+            <div class="activity-item" title="Appui long : modifier ou supprimer">
+              <div aria-hidden="true" style="font-size:1.6rem;">🧘‍♀️</div>
+              <div class="activity-meta">
+                <span class="time-text">huit et quart</span>
+                <span class="muted">Yoga</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div aria-hidden="true" style="font-size:1.6rem;">🍽️</div>
+              <div class="activity-meta">
+                <span class="time-text">douze et demi</span>
+                <span class="muted">Déjeuner</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div aria-hidden="true" style="font-size:1.6rem;">🏋️‍♀️</div>
+              <div class="activity-meta">
+                <span class="time-text">dix-sept heures</span>
+                <span class="muted">Musculation</span>
+              </div>
+            </div>
+            <div class="activity-item highlighted">
+              <div aria-hidden="true" style="font-size:1.6rem;">📽️</div>
+              <div class="activity-meta">
+                <span class="time-text">vingt heures</span>
+                <span>Cinéma</span>
+              </div>
+            </div>
+          </div>
+          <div class="nav-hints">
+            <span class="nav-pill">Swipe pour passer au jour suivant</span>
+            <span class="nav-pill">Blocage doux hors plage</span>
+          </div>
+          <button class="sticky-add" aria-label="Ajouter une activité">Ajouter</button>
+        </article>
+      </section>
+
+      <section class="flow-section" aria-label="Ajout guidé">
+        <div class="legend">
+          <span class="info-chip">Appui long sur une activité : modifier ou supprimer</span>
+          <span class="info-chip">Appui long sur un emoji : activer fond coloré</span>
+        </div>
+        <div class="stepper" aria-label="Étapes obligatoires">
+          <div class="step-card">
+            <h2>Étape une · Date</h2>
+            <p>Navigation temporelle avec snap obligatoire, aucune saisie libre.</p>
+            <div class="day-picker" aria-label="Sélecteur de jours coloré">
+              <div class="day-pill tone-green" title="Appui long : basculer périodique">
+                <span>lundi aujourd’hui</span>
+                <span class="muted">ponctuel</span>
+              </div>
+              <div class="day-pill tone-yellow" title="Appui long : basculer périodique">
+                <span>mardi demain</span>
+                <span class="muted">périodique</span>
+              </div>
+              <div class="day-pill tone-orange" title="Appui long : basculer périodique">
+                <span>mercredi vingt-sept juin</span>
+                <span class="muted">périodique</span>
+              </div>
+              <div class="day-pill tone-red">
+                <span>jeudi vingt-huit juin</span>
+                <span class="muted">ponctuel</span>
+              </div>
+              <div class="day-pill tone-purple">
+                <span>vendredi vingt-neuf juin</span>
+                <span class="muted">ponctuel</span>
+              </div>
+              <div class="day-pill tone-blue">
+                <span>samedi trente juin</span>
+                <span class="muted">ponctuel</span>
+              </div>
+              <div class="day-pill tone-grey">
+                <span>dimanche premier juillet</span>
+                <span class="muted">périodique</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <h2>Étape deux · Heure</h2>
+            <p>Sélection en quart d’heure avec libellés textuels uniquement.</p>
+            <div class="legend">
+              <span class="info-chip">huit heures</span>
+              <span class="info-chip">huit et quart</span>
+              <span class="info-chip">huit et demi</span>
+              <span class="info-chip">huit moins quart</span>
+              <span class="info-chip">quinze heures</span>
+              <span class="info-chip">quinze et demi</span>
+            </div>
+          </div>
+          <div class="step-card">
+            <h2>Étape trois · Activité</h2>
+            <p>Choisir un emoji, éditer le nom (vingt caractères max), appui long pour mettre en avant.</p>
+            <div class="emoji-grid" aria-label="Bibliothèque de cinquante activités">
+              <div class="emoji-card">♥️ Copain</div>
+              <div class="emoji-card">💃 Bachata</div>
+              <div class="emoji-card highlighted">🏊‍♂️ Piscine</div>
+              <div class="emoji-card highlighted">🤽‍♂️ Club</div>
+              <div class="emoji-card">🏋️‍♀️ Musculation</div>
+              <div class="emoji-card">🚶‍♂️ Marche</div>
+              <div class="emoji-card">🚴‍♂️ Vélo</div>
+              <div class="emoji-card">🧘‍♀️ Yoga</div>
+              <div class="emoji-card">📖 Révision</div>
+              <div class="emoji-card">💻 Travail</div>
+              <div class="emoji-card">🍽️ Resto</div>
+              <div class="emoji-card">🛒 Courses</div>
+              <div class="emoji-card">📽️ Cinéma</div>
+              <div class="emoji-card">🎶 Musique</div>
+              <div class="emoji-card">👨‍👩‍👧 Famille</div>
+              <div class="emoji-card">🏡 Maison</div>
+              <div class="emoji-card">🚆 Train</div>
+              <div class="emoji-card">✈️ Voyage</div>
+              <div class="emoji-card">🛌 Repos</div>
+              <div class="emoji-card">🌿 Nature</div>
+              <div class="emoji-card">📚 Lecture</div>
+              <div class="emoji-card">☕ Café</div>
+              <div class="emoji-card">🍵 Pause thé</div>
+              <div class="emoji-card">🥗 Cuisine</div>
+              <div class="emoji-card">🥘 Dîner</div>
+              <div class="emoji-card">🍰 Dessert</div>
+              <div class="emoji-card">🚿 Douche</div>
+              <div class="emoji-card">🧴 Soin</div>
+              <div class="emoji-card">🧺 Lessive</div>
+              <div class="emoji-card">🧹 Rangement</div>
+              <div class="emoji-card">🧑‍🍳 Atelier</div>
+              <div class="emoji-card">🪴 Jardin</div>
+              <div class="emoji-card">🎨 Dessin</div>
+              <div class="emoji-card">🎮 Jeu</div>
+              <div class="emoji-card">🎧 Écoute</div>
+              <div class="emoji-card">🎤 Chant</div>
+              <div class="emoji-card">🎸 Guitare</div>
+              <div class="emoji-card">🥁 Batterie</div>
+              <div class="emoji-card">🎹 Piano</div>
+              <div class="emoji-card">🏀 Basket</div>
+              <div class="emoji-card">🏐 Volley</div>
+              <div class="emoji-card">🧗 Escalade</div>
+              <div class="emoji-card">⛷️ Glisse</div>
+              <div class="emoji-card">🏖️ Plage</div>
+              <div class="emoji-card">🚣‍♂️ Canoë</div>
+              <div class="emoji-card">⛺ Bivouac</div>
+              <div class="emoji-card">🚌 Navette</div>
+              <div class="emoji-card">🚗 Trajet</div>
+              <div class="emoji-card">📱 Appel</div>
+              <div class="emoji-card">✉️ Message</div>
+              <div class="emoji-card">📝 Note</div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-bar" aria-label="Navigation guidée">
+          <button aria-label="Revenir">Précédent</button>
+          <button aria-label="Continuer">Suivant</button>
+        </div>
+      </section>
+
+      <section class="flow-section" aria-label="Edition et périodicité">
+        <h2>Edition rapide</h2>
+        <p>Chaque jour peut basculer entre ponctuel et périodique via un appui long. En mode périodique, la date disparaît mais le jour reste.</p>
+        <div class="legend">
+          <span class="info-chip tone-green">lundi aujourd’hui</span>
+          <span class="info-chip tone-yellow">mardi demain</span>
+          <span class="info-chip tone-orange">mercredi vingt-cinq juin</span>
+          <span class="info-chip tone-red">jeudi vingt-six juin</span>
+          <span class="info-chip tone-purple">vendredi vingt-sept juin</span>
+          <span class="info-chip tone-blue">samedi vingt-huit juin</span>
+          <span class="info-chip tone-grey">dimanche vingt-neuf juin</span>
+        </div>
+        <p class="muted">Modification ou suppression d’une activité périodique : choisir cette occurrence ou toute la série.</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
