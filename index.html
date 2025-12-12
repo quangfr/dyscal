@@ -18,7 +18,7 @@
       --surface: #ffffff;
       --shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
       --radius: 22px;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     * {
@@ -31,14 +31,16 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: grid;
-      grid-template-rows: 1fr;
+      display: flex;
+      justify-content: center;
     }
 
     .pwa-shell {
       min-height: 100vh;
       display: grid;
       grid-template-rows: auto 1fr;
+      width: min(100%, 360px);
+      margin: 0 auto;
     }
 
     .top-hero {
@@ -98,6 +100,34 @@
       font-size: 2.2rem;
     }
 
+    .header-actions {
+      margin-top: 0.75rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .ai-playback {
+      border: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: #111827;
+      font-weight: 800;
+      padding: 0.65rem 0.85rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+      background: #fff7ed;
+    }
+
+    .ai-playback[aria-pressed="true"] {
+      transform: translateY(1px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+      background: #ffe4e6;
+    }
+
     main {
       padding: 1.25rem;
       padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
@@ -148,6 +178,37 @@
       border-radius: 999px;
       font-weight: 800;
       font-size: 0.9rem;
+    }
+
+    .specs-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .specs-card h2 {
+      margin: 0 0 0.65rem;
+      font-size: 1.15rem;
+    }
+
+    .specs-grid {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .spec-line {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .spec-line span {
+      color: var(--muted);
+      font-weight: 600;
     }
 
     .week-ribbon {
@@ -205,9 +266,10 @@
 
     .bottom-cta {
       position: fixed;
-      left: 0;
-      right: 0;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 0;
+      width: min(100%, 360px);
       padding: 1rem;
       padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
       background: linear-gradient(0deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 100%);
@@ -228,17 +290,133 @@
       box-shadow: var(--shadow);
     }
 
-    @media (min-width: 900px) {
-      body {
-        background: radial-gradient(circle at 20% 20%, #fff7ed, #f4f5f9 45%);
-      }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+    }
 
-      main {
-        grid-template-columns: 1.2fr 0.9fr;
-        align-items: start;
-        max-width: 1100px;
-        margin: 0 auto 3.5rem;
-      }
+    .modal {
+      background: var(--surface);
+      border-radius: 20px;
+      width: min(100%, 360px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+      padding: 1.1rem;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .modal header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .modal .close-btn {
+      border: none;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.5rem 0.65rem;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .step-pill {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      text-align: center;
+      font-weight: 800;
+      color: var(--muted);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .step-pill.active {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #ffffff;
+      box-shadow: var(--shadow);
+      border-color: transparent;
+    }
+
+    .modal form {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .modal label {
+      display: grid;
+      gap: 0.35rem;
+      font-weight: 800;
+    }
+
+    .modal input,
+    .modal textarea,
+    .modal select {
+      padding: 0.8rem 0.9rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: #f8fafc;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .modal textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .modal .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .modal .secondary {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+
+    .modal .primary {
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #ffffff;
+    }
+
+    .modal .primary,
+    .modal .secondary {
+      border: none;
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      font-weight: 800;
+      flex: 1;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .modal .review-card {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 0.8rem;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      display: grid;
+      gap: 0.4rem;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -253,79 +431,29 @@
       <div class="now-card" role="alert">
         <div>
           <small>prochain créneau</small>
-          <strong>sept heures un quart</strong>
+          <strong id="next-time">sept heures un quart</strong>
         </div>
-        <div class="now-emoji" aria-hidden="true">💃</div>
+        <div class="now-emoji" aria-hidden="true" id="next-emoji">💃</div>
+      </div>
+      <div class="header-actions">
+        <button class="ai-playback" type="button" id="ai-playback" aria-pressed="false">
+          ▶️ Lecture AI
+        </button>
       </div>
     </header>
 
     <main>
-      <section aria-label="Journée" class="schedule">
-        <div class="slot highlight">
-          <div aria-hidden="true" style="font-size:1.6rem;">💃</div>
-          <div>
-            <strong>sept heures un quart</strong>
-            <small>Bachata</small>
-          </div>
-          <span class="badge" aria-label="créneau sélectionné">priorité</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">🏊‍♂️</div>
-          <div>
-            <strong>neuf heures</strong>
-            <small>Piscine</small>
-          </div>
-          <span aria-hidden="true">›</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">📖</div>
-          <div>
-            <strong>dix heures</strong>
-            <small>Révisions</small>
-          </div>
-          <span aria-hidden="true">›</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">🤽‍♂️</div>
-          <div>
-            <strong>onze heures</strong>
-            <small>Club</small>
-          </div>
-          <span aria-hidden="true">›</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">👨‍👩‍👧</div>
-          <div>
-            <strong>quatorze heures</strong>
-            <small>Lyon 5</small>
-          </div>
-          <span aria-hidden="true">›</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">🏡</div>
-          <div>
-            <strong>dix-neuf heures</strong>
-            <small>Villeneuve</small>
-          </div>
-          <span aria-hidden="true">›</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">🏋️‍♀️</div>
-          <div>
-            <strong>vingt heures</strong>
-            <small>Musculation</small>
-          </div>
-          <span aria-hidden="true">›</span>
-        </div>
-        <div class="slot">
-          <div aria-hidden="true" style="font-size:1.6rem;">❤️</div>
-          <div>
-            <strong>vingt et une heures</strong>
-            <small>Amie</small>
-          </div>
-          <span aria-hidden="true">›</span>
+      <section class="specs-card" aria-label="Cahier de spécifications repensé">
+        <h2>Spécifications repensées</h2>
+        <div class="specs-grid">
+          <div class="spec-line">🎧 <span>Lecture AI guidée pour rejouer le planning.</span></div>
+          <div class="spec-line">📱 <span>Largeur contenue à 360px pour une navigation mobile.</span></div>
+          <div class="spec-line">🧩 <span>Ajout pas-à-pas via un modal dédié.</span></div>
+          <div class="spec-line">💾 <span>Activités enregistrées et restaurées automatiquement.</span></div>
         </div>
       </section>
+
+      <section aria-label="Journée" class="schedule" id="schedule"></section>
 
       <section aria-label="Repère visuel de la semaine" class="week-ribbon">
         <div class="time-grid" aria-label="Grille textuelle d'heures">
@@ -350,10 +478,287 @@
   </div>
 
   <div class="bottom-cta">
-    <button type="button" aria-label="Ajouter une activité">Ajouter une activité</button>
+    <button type="button" aria-label="Ajouter une activité" id="open-modal">Ajouter une activité</button>
+  </div>
+
+  <div class="modal-backdrop" id="activity-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header>
+        <h2 id="modal-title">Nouvelle activité</h2>
+        <button class="close-btn" type="button" id="close-modal" aria-label="Fermer">✕</button>
+      </header>
+      <div class="stepper" aria-label="Étapes du formulaire">
+        <div class="step-pill active" data-step-pill="0">1. Emoji</div>
+        <div class="step-pill" data-step-pill="1">2. Détails</div>
+        <div class="step-pill" data-step-pill="2">3. Spécifications</div>
+      </div>
+      <form id="activity-form">
+        <div class="form-step" data-step="0">
+          <label for="activity-emoji">
+            Choisir un pictogramme
+            <input id="activity-emoji" name="emoji" type="text" inputmode="text" maxlength="4" placeholder="💃" required />
+          </label>
+          <div class="spec-line" style="justify-content: space-between;">
+            <span>Suggestions rapides</span>
+            <div style="display:flex; gap:0.35rem;">
+              <button type="button" class="close-btn" data-emoji="🏊‍♂️" aria-label="Utiliser l'emoji piscine">🏊‍♂️</button>
+              <button type="button" class="close-btn" data-emoji="📖" aria-label="Utiliser l'emoji lecture">📖</button>
+              <button type="button" class="close-btn" data-emoji="💃" aria-label="Utiliser l'emoji danse">💃</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step" data-step="1" hidden>
+          <label for="activity-time">
+            Heure en toutes lettres
+            <input id="activity-time" name="time" type="text" placeholder="ex : neuf heures" required />
+          </label>
+          <label for="activity-title">
+            Nom de l'activité
+            <input id="activity-title" name="title" type="text" placeholder="ex : Piscine" required />
+          </label>
+        </div>
+
+        <div class="form-step" data-step="2" hidden>
+          <label for="activity-notes">
+            Spécifications additionnelles
+            <textarea id="activity-notes" name="notes" placeholder="lieu, priorité, consignes..." ></textarea>
+          </label>
+          <label style="display:flex; align-items:center; gap:0.5rem;">
+            <input type="checkbox" id="activity-priority" name="priority" />
+            Marquer comme créneau prioritaire
+          </label>
+          <div class="review-card" id="review-card">
+            <div><strong>Emoji :</strong> <span id="review-emoji">💃</span></div>
+            <div><strong>Horaire :</strong> <span id="review-time">--</span></div>
+            <div><strong>Activité :</strong> <span id="review-title">--</span></div>
+            <div><strong>Notes :</strong> <span id="review-notes">--</span></div>
+            <div><strong>Priorité :</strong> <span id="review-priority">non</span></div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary" id="prev-step">Étape précédente</button>
+          <button type="button" class="primary" id="next-step">Étape suivante</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
+    const scheduleContainer = document.getElementById('schedule');
+    const openModalButton = document.getElementById('open-modal');
+    const modal = document.getElementById('activity-modal');
+    const closeModalButton = document.getElementById('close-modal');
+    const form = document.getElementById('activity-form');
+    const stepPills = [...document.querySelectorAll('[data-step-pill]')];
+    const steps = [...document.querySelectorAll('.form-step')];
+    const prevStepButton = document.getElementById('prev-step');
+    const nextStepButton = document.getElementById('next-step');
+    const emojiInput = document.getElementById('activity-emoji');
+    const timeInput = document.getElementById('activity-time');
+    const titleInput = document.getElementById('activity-title');
+    const notesInput = document.getElementById('activity-notes');
+    const priorityInput = document.getElementById('activity-priority');
+    const aiPlaybackButton = document.getElementById('ai-playback');
+    const nextTimeLabel = document.getElementById('next-time');
+    const nextEmojiLabel = document.getElementById('next-emoji');
+    const reviewFields = {
+      emoji: document.getElementById('review-emoji'),
+      time: document.getElementById('review-time'),
+      title: document.getElementById('review-title'),
+      notes: document.getElementById('review-notes'),
+      priority: document.getElementById('review-priority')
+    };
+
+    const storageKey = 'dyscalActivities';
+    const defaultActivities = [
+      { emoji: '💃', time: 'sept heures un quart', title: 'Bachata', priority: true, notes: 'échauffement avant le cours' },
+      { emoji: '🏊‍♂️', time: 'neuf heures', title: 'Piscine', priority: false, notes: 'brasse et dos crawlé' },
+      { emoji: '📖', time: 'dix heures', title: 'Révisions', priority: false, notes: 'maths + rédaction' },
+      { emoji: '🤽‍♂️', time: 'onze heures', title: 'Club', priority: false, notes: 'retrouver les copains' },
+      { emoji: '👨‍👩‍👧', time: 'quatorze heures', title: 'Lyon 5', priority: false, notes: 'trajet tram' },
+      { emoji: '🏡', time: 'dix-neuf heures', title: 'Villeneuve', priority: false, notes: 'préparer le sac' },
+      { emoji: '🏋️‍♀️', time: 'vingt heures', title: 'Musculation', priority: false, notes: 'séance courte' },
+      { emoji: '❤️', time: 'vingt et une heures', title: 'Amie', priority: false, notes: 'bavardage' }
+    ];
+
+    let activities = [];
+    let currentStep = 0;
+    let isSpeaking = false;
+
+    const suggestionButtons = document.querySelectorAll('[data-emoji]');
+    suggestionButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        emojiInput.value = btn.dataset.emoji;
+        syncReview();
+      });
+    });
+
+    function loadActivities() {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          activities = JSON.parse(stored);
+        } catch (error) {
+          activities = [...defaultActivities];
+        }
+      } else {
+        activities = [...defaultActivities];
+      }
+      saveActivities();
+    }
+
+    function saveActivities() {
+      localStorage.setItem(storageKey, JSON.stringify(activities));
+    }
+
+    function syncReview() {
+      reviewFields.emoji.textContent = emojiInput.value || '💃';
+      reviewFields.time.textContent = timeInput.value || '--';
+      reviewFields.title.textContent = titleInput.value || '--';
+      reviewFields.notes.textContent = notesInput.value?.trim() || 'aucune note';
+      reviewFields.priority.textContent = priorityInput.checked ? 'oui' : 'non';
+    }
+
+    function renderSchedule() {
+      scheduleContainer.innerHTML = '';
+      activities.forEach((activity) => {
+        const slot = document.createElement('div');
+        slot.className = `slot${activity.priority ? ' highlight' : ''}`;
+
+        const emoji = document.createElement('div');
+        emoji.setAttribute('aria-hidden', 'true');
+        emoji.style.fontSize = '1.6rem';
+        emoji.textContent = activity.emoji;
+
+        const info = document.createElement('div');
+        const time = document.createElement('strong');
+        time.textContent = activity.time;
+        const title = document.createElement('small');
+        title.textContent = activity.title;
+        info.append(time, title);
+
+        const trailing = document.createElement('span');
+        trailing.setAttribute('aria-hidden', 'true');
+        trailing.textContent = activity.priority ? 'priorité' : '›';
+        if (activity.priority) {
+          trailing.className = 'badge';
+        }
+
+        slot.append(emoji, info, trailing);
+        scheduleContainer.append(slot);
+      });
+    }
+
+    function updateNextCard() {
+      const nextPriority = activities.find((activity) => activity.priority);
+      const nextActivity = nextPriority || activities[0];
+      if (!nextActivity) return;
+      nextTimeLabel.textContent = nextActivity.time;
+      nextEmojiLabel.textContent = nextActivity.emoji;
+    }
+
+    function showStep(stepIndex) {
+      currentStep = Math.min(Math.max(stepIndex, 0), steps.length - 1);
+      steps.forEach((step, index) => {
+        step.hidden = index !== currentStep;
+      });
+      stepPills.forEach((pill, index) => {
+        pill.classList.toggle('active', index === currentStep);
+      });
+      prevStepButton.disabled = currentStep === 0;
+      nextStepButton.textContent = currentStep === steps.length - 1 ? 'Enregistrer' : 'Étape suivante';
+      syncReview();
+    }
+
+    function resetForm() {
+      form.reset();
+      emojiInput.value = '💃';
+      currentStep = 0;
+      showStep(currentStep);
+      syncReview();
+    }
+
+    function openModal() {
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      showStep(0);
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      resetForm();
+    }
+
+    function addActivity() {
+      const newActivity = {
+        emoji: emojiInput.value || '❔',
+        time: timeInput.value || 'horaire à définir',
+        title: titleInput.value || 'Nouvelle activité',
+        notes: notesInput.value,
+        priority: priorityInput.checked
+      };
+      activities = [...activities, newActivity];
+      saveActivities();
+      renderSchedule();
+      updateNextCard();
+    }
+
+    function handleNext() {
+      if (currentStep < steps.length - 1) {
+        showStep(currentStep + 1);
+        return;
+      }
+      addActivity();
+      closeModal();
+    }
+
+    function handlePrev() {
+      showStep(currentStep - 1);
+    }
+
+    function handlePlayback() {
+      if (!('speechSynthesis' in window)) {
+        alert('La lecture AI nécessite speechSynthesis.');
+        return;
+      }
+
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+        aiPlaybackButton.setAttribute('aria-pressed', 'false');
+        return;
+      }
+
+      const description = activities
+        .map((activity) => `${activity.time}, ${activity.title}`)
+        .join('. ');
+      const utterance = new SpeechSynthesisUtterance(`Voici ta journée : ${description}`);
+      utterance.lang = 'fr-FR';
+      utterance.onend = () => {
+        isSpeaking = false;
+        aiPlaybackButton.setAttribute('aria-pressed', 'false');
+      };
+      window.speechSynthesis.speak(utterance);
+      isSpeaking = true;
+      aiPlaybackButton.setAttribute('aria-pressed', 'true');
+    }
+
+    openModalButton.addEventListener('click', openModal);
+    closeModalButton.addEventListener('click', closeModal);
+    prevStepButton.addEventListener('click', handlePrev);
+    nextStepButton.addEventListener('click', handleNext);
+    aiPlaybackButton.addEventListener('click', handlePlayback);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    form.addEventListener('input', syncReview);
+
+    loadActivities();
+    renderSchedule();
+    updateNextCard();
+    syncReview();
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js').catch(() => {
